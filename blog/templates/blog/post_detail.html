@@ -1,10 +1,24 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
+    <script>
+{#        {% url 'post_remove' pk=post.pk %}#}
+        function post_remove(){
+            var result = confirm("Post를 삭제하시겠습니까?");
+            if(result){
+                var remove_url = "{% url 'post_remove' pk=post.pk %}";
+                document.location.href=remove_url;
+            }
+        }
+    </script>
     <div class="post">
         <div class="date">
             <p>published: {{ post.published_date }}</p>
         </div>
+        <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"> <span
+                class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="#" onclick="post_remove()"> <span
+                class="glyphicon glyphicon-remove"></span></a>
         <h1>{{ post.title }}</h1>
         <p>{{ post.text| linebreaksbr }}</p>
     </div>

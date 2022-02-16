@@ -10,23 +10,27 @@
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 </head>
 <body>
-    <div class="page-header">
+<div class="page-header">
+    {% if user.is_authenticated %}
         <a href="{% url 'post_new' %}" class="top-menu">
             <span class="glyphicon glyphicon-plus"></span>
         </a>
-        <h1><a href="{%  url 'post_list_home' %}">Django Blog</a></h1>
+    {% else %}
+        <a href="{% url 'login' %}" class="top-menu"> <span class="glyphicon glyphicon-lock"></span></a>
+    {% endif %}
+    <h1><a href="{% url 'post_list_home' %}">Django Blog</a></h1>
 
-    </div>
-    <!-- HTML 주석 -->
-    {# 파이썬 주석1 #}
-    {% comment %} 파이썬 주석2 {% endcomment %}
-    <div class="content container">
-        <div class="row">
-            <div class="col-md-8">
-                {% block content %}
-                {% endblock %}
-            </div>
+</div>
+<!-- HTML 주석 -->
+{# 파이썬 주석1 #}
+{% comment %} 파이썬 주석2 {% endcomment %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
         </div>
     </div>
+</div>
 </body>
 </html>
