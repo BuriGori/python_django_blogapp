@@ -2,12 +2,13 @@
 
 {% block content %}
     <script>
-{#        {% url 'post_remove' pk=post.pk %}#}
-        function post_remove(){
+        {#        {% url 'post_remove' pk=post.pk %}#}
+
+        function post_remove() {
             var result = confirm("Post를 삭제하시겠습니까?");
-            if(result){
+            if (result) {
                 var remove_url = "{% url 'post_remove' pk=post.pk %}";
-                document.location.href=remove_url;
+                document.location.href = remove_url;
             }
         }
     </script>
@@ -15,11 +16,32 @@
         <div class="date">
             <p>published: {{ post.published_date }}</p>
         </div>
-        <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"> <span
-                class="glyphicon glyphicon-pencil"></span></a>
-        <a class="btn btn-default" href="#" onclick="post_remove()"> <span
-                class="glyphicon glyphicon-remove"></span></a>
+        {% if user.is_authenticated %}
+            <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"> <span
+                    class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" href="#" onclick="post_remove()"> <span
+                    class="glyphicon glyphicon-remove"></span></a>
+        {% endif %}
         <h1>{{ post.title }}</h1>
         <p>{{ post.text| linebreaksbr }}</p>
     </div>
+    <hr>
+    <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+    {% for comment in post.comments.all %}
+        {% if user.is_authenticated or comment.approved_comment %}
+        <div class="comment">
+            <div class="date">{{ comment.created_date }}</div>
+            {% if not comment.approved_comment %}
+                <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"> <span
+                        class="glyphicon glyphicon-remove"></span></a>
+                <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"> <span
+                        class="glyphicon glyphicon-ok"></span></a>
+            {% endif %}
+            <strong>{{ comment.author }}</strong>
+            <p>{{ comment.text|linebreaks }}</p>
+        </div>
+        {% endif %}
+    {% empty %}
+        <p>No comments here yet :(</p>
+    {% endfor %}
 {% endblock %}
