@@ -1,5 +1,13 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+
 from . import views
+from . import viewsets
+
+router = routers.DefaultRouter()
+router.register(r'posts', viewsets.PostViewSet)
+router.register(r'comments', viewsets.CommentViewSet)
+
 
 urlpatterns = [
     path('', views.post_list, name='post_list_home'),
@@ -10,4 +18,6 @@ urlpatterns = [
     path('post/<int:pk>/comment/', views.add_comment_to_post, name='add_comment_to_post'),
     path('comment/<int:pk>/approve/', views.comment_approve, name='comment_approve'),
     path('comment/<int:pk>/remove/', views.comment_remove, name='comment_remove'),
+    path('', include(router.urls)),
+    path('api/login/', views.login, name='login'),
 ]
